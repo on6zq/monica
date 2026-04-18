@@ -70,10 +70,32 @@ class CountriesHelper
      */
     private static function getCommonNameLocale(Country $country): string
     {
-        $locale = App::getLocale();
-        $lang = LocaleHelper::getLocaleAlpha($locale);
+        // Explicit overrides for countries with known data issues in the package.
+        static $overrides = [
+            'AF' => 'Afghanistan',
+            'BE' => 'Belgium',
+        ];
 
-        return $country->getTranslation($lang)['common'];
+        $iso = $country->getIsoAlpha2();
+        if (isset($overrides[$iso])) {
+            return $overrides[$iso];
+        }
+
+        $locale = App::getLocale();
+        // Strip any country suffix (e.g. 'en-GB' → 'en') before the ISO-639-3 lookup,
+        // because getLocaleAlpha() expects a two-letter language code.
+        $langCode = LocaleHelper::getLang($locale);
+        $lang = LocaleHelper::getLocaleAlpha($langCode);
+
+        if ($lang) {
+            $translation = $country->getTranslation($lang);
+            if (is_array($translation) && isset($translation['common'])) {
+                return $translation['common'];
+            }
+        }
+
+        // Fallback: use the package's own English common name.
+        return $country->getName() ?? $iso ?? '';
     }
 
     /**

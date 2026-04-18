@@ -66,6 +66,12 @@
     @endif
 
     @component('components.sidebar', [
+      'route' => 'settings.relationscheck.index',
+      'icon' => 'fa fa-sitemap',
+      'title' => 'settings.sidebar_settings_relationscheck'])
+    @endcomponent
+
+    @component('components.sidebar', [
       'route' => 'settings.auditlog.index',
       'icon' => 'fa fa-id-card-o',
       'title' => 'settings.sidebar_settings_auditlogs'])

@@ -290,6 +290,13 @@ Route::middleware(['auth', 'verified', 'mfa'])->group(function () {
             }
         });
 
+        Route::name('relationscheck.')->group(function () {
+            Route::get('/settings/relationscheck', 'Settings\\RelationsCheckController@index')->name('index');
+            Route::post('/settings/relationscheck/fix-reciprocals', 'Settings\\RelationsCheckController@fixReciprocals')->name('fix-reciprocals');
+            Route::post('/settings/relationscheck/apply-suggestions', 'Settings\\RelationsCheckController@applySuggestions')->name('apply-suggestions');
+            Route::post('/settings/relationscheck/create-suggestion', 'Settings\\RelationsCheckController@createSuggestion')->name('create-suggestion');
+        });
+
         Route::get('/settings/auditlogs', 'Settings\\AuditLogController@index')->name('auditlog.index');
 
         Route::name('tags.')->group(function () {
